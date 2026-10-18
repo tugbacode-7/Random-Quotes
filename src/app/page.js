@@ -1,22 +1,18 @@
 "use client";
-
+import { Button } from "./components/button";
 import { quotes as initialQuotes } from "@/quotes";
 import { useState } from "react";
 import { QuoteText } from "./components/typography/quote";
 import { AuthorName } from "./components/typography/author";
-import { LikeButton } from "./components/button/likedButton";
-import { NextButton } from "./components/button/nextButton";
 import { Card } from "./components/card";
 import { userAgent } from "next/server";
-import { PreviousBtn } from "./components/button/previousButton";
 import { LikeIcon, NextIcon, PrevIcon } from "./components/icons";
 
 export default function Home() {
-  const quotes = [...initialQuotes];
+  const [quotes, setQuotes] = useState(initialQuotes);
   const [index, setIndex] = useState(0);
-  const userId = "User 1";
-  
-  
+  const userId = "User_1";
+
   const currentQuote = quotes[index];
   const isLiked = currentQuote.likedBy.includes(userId);
 
@@ -26,16 +22,18 @@ export default function Home() {
   }
 
   function likeBtn() {
-    if (!quotes[index].likedBy.includes(user)) {
-      quotes[index].likedBy.push(user);
-      setLiked((isLiked) => !isLiked);
-      console.log(quotes[index].likedBy);
-    } else {
-      let like = quotes[index].likedBy.indexOf(user);
-      quotes[index].likedBy.splice(like, 1);
-      setLiked((isLiked) => !isLiked);
-      console.log(quotes[index].likedBy);
-    }
+    setQuotes((prevQuotes) =>
+      prevQuotes.map((quote, quoteIndex) => {
+        if (quoteIndex !== index) return quote;
+        const isLiked = quote.likedBy.includes(userId);
+        return {
+          ...quote,
+          likedBy: isLiked
+            ? quote.likedBy.filter((id) => id !== userId)
+            : [...quote.likedBy, userId],
+        };
+      }),
+    );
   }
 
   function previousButton() {
@@ -60,18 +58,18 @@ export default function Home() {
         </AuthorName>
 
         <div className="flex">
-          <LikeButton handleClick={likeBtn}>
+          <Button handleClick={likeBtn}>
             <LikeIcon liked={isLiked}></LikeIcon>
-          </LikeButton>
+          </Button>
 
           <div className="flex justify-end ml-auto gap-10">
-            <PreviousBtn handleClick={previousButton}>
+            <Button handleClick={previousButton}>
               <PrevIcon></PrevIcon>
-            </PreviousBtn>
+            </Button>
 
-            <NextButton handleClick={handleclick}>
+            <Button handleClick={handleclick}>
               <NextIcon></NextIcon>
-            </NextButton>
+            </Button>
           </div>
         </div>
       </Card>
