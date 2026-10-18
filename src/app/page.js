@@ -13,10 +13,12 @@ import { LikeIcon, NextIcon, PrevIcon } from "./components/icons";
 
 export default function Home() {
   const quotes = [...initialQuotes];
-  let [index, setIndex] = useState(0);
-  let user = "User 1";
-  let isLiked = quotes[index].likedBy.includes(user);
-  let [liked, setLiked] = useState(isLiked);
+  const [index, setIndex] = useState(0);
+  const userId = "User 1";
+  
+  
+  const currentQuote = quotes[index];
+  const isLiked = currentQuote.likedBy.includes(userId);
 
   function handleclick() {
     setIndex((prevIndex) => (prevIndex += 1));
