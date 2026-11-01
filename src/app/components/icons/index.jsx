@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
   faCircleLeft,
   faCircleRight,
@@ -26,4 +27,8 @@ export const LikeIcon = ({ liked }) => (
     icon={faHeart}
     className={`fa-solid fa-heart text-olive-800 fa-xl  ${liked ? "text-red-800" : ""}`}
   />
+);
+
+export const UnlikeIcon = () => (
+  <FontAwesomeIcon icon={faHeart} className={"fa-heart fa-xl"} />
 );

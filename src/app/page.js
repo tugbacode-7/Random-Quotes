@@ -1,74 +1,63 @@
 "use client";
+
 import { Button } from "./components/button";
-import { quotes as initialQuotes } from "@/quotes";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { QuoteText } from "./components/typography/quote";
 import { AuthorName } from "./components/typography/author";
 import { Card } from "./components/card";
-import { userAgent } from "next/server";
-import { LikeIcon, NextIcon, PrevIcon } from "./components/icons";
+import { LikeIcon, NextIcon, PrevIcon} from "./components/icons";
+import { QuotesContext, userId } from "./context/quotesContextProvider";
+import Link from "next/link";
 
 export default function Home() {
-  const [quotes, setQuotes] = useState(initialQuotes);
+  const { quotes, handleLike } = useContext(QuotesContext);
+
   const [index, setIndex] = useState(0);
-  const userId = "User_1";
 
   const currentQuote = quotes[index];
   const isLiked = currentQuote.likedBy.includes(userId);
 
   function handleclick() {
-    setIndex((prevIndex) => (prevIndex += 1));
-    console.log("Button is clicked");
-  }
-
-  function likeBtn() {
-    setQuotes((prevQuotes) =>
-      prevQuotes.map((quote, quoteIndex) => {
-        if (quoteIndex !== index) return quote;
-        const isLiked = quote.likedBy.includes(userId);
-        return {
-          ...quote,
-          likedBy: isLiked
-            ? quote.likedBy.filter((id) => id !== userId)
-            : [...quote.likedBy, userId],
-        };
-      }),
+    setIndex((prevIndex) =>
+      prevIndex < quotes.length - 1 ? prevIndex + 1 : 0,
     );
   }
 
   function previousButton() {
-    setIndex((preIndex) => {
-      if (preIndex == 0) {
-        return preIndex;
-      } else {
-        return (preIndex -= 1);
-      }
-    });
+    setIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : quotes.length - 1,
+    );
   }
 
   return (
     <main>
+      <div className="flex justify-center mt-10 mb-8">
+        <Link
+          href="/user/quotes/liked"
+          className="bg-zinc-600 text-white p-6 py-3 rounded-lg text-sm"
+        >
+          Liked Quotes
+        </Link>
+      </div>
       <Card>
-        <QuoteText className={"text-zinc-800"} liked={isLiked}>
-          {quotes[index].quote}
+        <QuoteText className="text-zinc-800" liked={isLiked}>
+          {currentQuote.quote}
         </QuoteText>
 
-        <AuthorName className={"text-zinc-500"}>
-          {quotes[index].author}
-        </AuthorName>
+        <AuthorName className="text-zinc-500">{currentQuote.author}</AuthorName>
 
         <div className="flex">
-          <Button handleClick={likeBtn}>
-            <LikeIcon liked={isLiked}></LikeIcon>
+          <Button handleClick={() => handleLike(index)}>
+            <LikeIcon liked={isLiked} />
           </Button>
 
           <div className="flex justify-end ml-auto gap-10">
             <Button handleClick={previousButton}>
-              <PrevIcon></PrevIcon>
+              <PrevIcon />
             </Button>
 
             <Button handleClick={handleclick}>
-              <NextIcon></NextIcon>
+              <NextIcon />
             </Button>
           </div>
         </div>
