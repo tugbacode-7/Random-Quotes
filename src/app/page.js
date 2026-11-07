@@ -47,7 +47,7 @@ export default function Home() {
         <AuthorName className="text-zinc-500">{currentQuote.author}</AuthorName>
 
         <div className="flex">
-          <Button handleClick={() => handleLike(index)}>
+          <Button handleClick={() => handleLike(currentQuote.id)}>
             <LikeIcon liked={isLiked} />
           </Button>
 
