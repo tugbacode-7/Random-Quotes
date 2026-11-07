@@ -18,10 +18,10 @@ export const QuotesContext = createContext({
 export function QuotesContextProvider({ children }) {
   const [quotes, setQuotes] = useState(updatedQuotes);
 
-  function handleLike(currentQuoteIndex) {
+  function handleLike(quoteId) {
     setQuotes((prevQuotes) =>
-      prevQuotes.map((quote, index) => {
-        if (index !== currentQuoteIndex) return quote;
+      prevQuotes.map((quote) => {
+        if (quote.id !== quoteId) return quote;
 
         const isLiked = quote.likedBy.includes(userId);
 
